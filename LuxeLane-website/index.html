@@ -115,7 +115,7 @@ nav.main a:hover{color:var(--brass-text)}
 .cat .ic{font-size:1.6rem;line-height:1}
 .cat b{font-family:var(--display);font-size:1.35rem;text-transform:uppercase;letter-spacing:.02em}
 .cat span{font-size:var(--step--1);color:var(--ink-soft)}
-.pkgs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pkgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 .pkg{position:relative;display:flex;flex-direction:column;gap:.6rem;border:1px solid var(--line);padding:22px 18px;background:#fff}
 .pkg.pop{border-color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.06)}
 .pkg .flag{position:absolute;top:-11px;left:18px;background:var(--brass);color:#fff;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;padding:.25em .7em}
@@ -123,7 +123,7 @@ nav.main a:hover{color:var(--brass-text)}
 .pkg .pr{font-size:1.5rem;font-weight:500;font-variant-numeric:tabular-nums}
 .pkg .pr small{font-size:.8rem;color:var(--ink-soft);font-weight:400}
 .pkg .space{font-size:var(--step--1);color:var(--brass-text);letter-spacing:.04em}
-.pkg ul{margin:0;padding-left:1.1rem;color:var(--ink-soft);font-size:.92rem;display:grid;gap:.3rem;flex:1}
+.pkg ul{margin:0;padding-left:1.1rem;color:var(--ink-soft);font-size:.92rem;display:grid;gap:.3rem;flex:1;align-content:start}
 .pkg .btn{width:100%;margin-top:.4rem}
 .common{margin-top:18px;font-size:var(--step--1);color:var(--ink-soft)}
 .common b{color:var(--ink)}
@@ -681,12 +681,13 @@ const PACKAGES_DRAFT = false; // true shows a "draft" banner on the booking page
 const SHOW_PRICES = false; // set to true once real package prices are filled in below
 const BANK = { bank:"UBL (United Bank Limited)", title:"Luxe Lane", account:"", iban:"PK36UNIL0109000337823981" }; // fill in: bank name, account title, account number, IBAN
 const STORE_ADDRESS = "Luxe Lane Multi Brand Store, Building 44-C, Bukhari Commercial, Lane 1, Phase 6, DHA, Karachi. Phone: 0316 8679465";
-const COMMON = "Every package is monthly and includes: Luxe Lane staff selling your products 6 days a week (Mon–Sat, 12–9 pm), your brand name on display, and a weekly sales update on WhatsApp.";
+const COMMON = "Every package is monthly and includes: an in-store cashier who handles all customer transactions, secure inventory management, and dedicated staff assistance for day-to-day maintenance.";
 const CATS = [
- {id:"clothing", code:"CL", name:"Clothing", ic:"👗", hint:"Pret, formal, bridal, men's", unit:"rail", pk:[
-   {n:"Starter Rail", p:15000, s:"Half rail · up to 15 pieces", f:["Brand name tag on your rail","Sold by our floor staff","Weekly sales update"]},
-   {n:"Signature Rail", p:25000, s:"Full rail · up to 30 pieces", pop:1, f:["Everything in Starter","1 mannequin look styled from your collection","1 Instagram story feature every week"]},
-   {n:"Showcase", p:40000, s:"Full rail + front window", f:["Everything in Signature","Window display facing Bukhari Commercial","1 dedicated Instagram reel a month","Launch-day shout-out"]}]},
+ {id:"clothing", code:"CL", name:"Clothing", ic:"👗", hint:"Pret, formal, bridal, men's", real:1, pk:[
+   {n:"Standard", p:20000, s:"10–12 outfits · rack display", f:["Rack display","Brand name display","Basic staff support","Shared utilities"]},
+   {n:"Premium", p:30000, s:"10–15 outfits · rack + mannequin", pop:1, f:["Rack display","Mannequin display","Social media coverage","Staff assistance with orders","Shared utilities"]},
+   {n:"Gold", p:50000, s:"20 outfits · premium rack", f:["Premium rack display","Mannequin display","Social media coverage","Sales assistance","3 dresses shot per month (4 pictures each)","Special coverage in store raids (blogs)"]},
+   {n:"Platinum", p:80000, s:"20–25 outfits · bridal & premium display", f:["Bridal display & premium display","Mannequin display","Brand name display","Social media handling (3 posts & 5 stories a week)","5 dresses shot, edited & posted","Coverage in store raids","Sales assistance"]}]},
  {id:"bags", code:"BG", name:"Bags", ic:"👜", hint:"Handbags, clutches, totes", pk:[
    {n:"Starter Shelf", p:10000, s:"1 shelf · up to 8 bags", f:["Brand name card on shelf","Sold by our floor staff","Weekly sales update"]},
    {n:"Signature Shelf", p:18000, s:"2 shelves · up to 16 bags", pop:1, f:["Everything in Starter","Bags styled with outfits on the floor","1 Instagram story feature every week"]},
@@ -720,13 +721,13 @@ const CATS = [
   el("#bkCats").innerHTML=CATS.map(c=>`<button type="button" class="cat" data-cat="${c.id}"><span class="ic" aria-hidden="true">${c.ic}</span><b>${c.name}</b><span>${c.hint}</span></button>`).join("");
   el("#bkCats").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;bk.cat=CATS.find(c=>c.id===b.dataset.cat);renderPkgs();show(2)});
   function renderPkgs(){const c=bk.cat;el("#bkPkgTitle").textContent=c.name+" packages";
-    el("#bkPkgs").innerHTML=c.pk.map((p,i)=>`<div class="pkg${p.pop?" pop":""}">${p.pop?'<span class="flag">Most popular</span>':""}<h4>${p.n}</h4><div class="pr">${SHOW_PRICES?money(p.p)+" <small>/ month</small>":"<small>Monthly rate shared on WhatsApp</small>"}</div><div class="space">${p.s}</div><ul>${p.f.map(x=>`<li>${x}</li>`).join("")}</ul><button type="button" class="btn${p.pop?"":" ghost"}" data-pk="${i}">Choose ${p.n}</button></div>`).join("");
+    el("#bkPkgs").innerHTML=c.pk.map((p,i)=>`<div class="pkg${p.pop?" pop":""}">${p.pop?'<span class="flag">Most popular</span>':""}<h4>${p.n}</h4><div class="pr">${(SHOW_PRICES||bk.cat.real)?money(p.p)+" <small>/ month</small>":"<small>Monthly rate shared on WhatsApp</small>"}</div><div class="space">${p.s}</div><ul>${p.f.map(x=>`<li>${x}</li>`).join("")}</ul><button type="button" class="btn${p.pop?"":" ghost"}" data-pk="${i}">Choose ${p.n}</button></div>`).join("");
     el("#bkCommon").innerHTML="<b>All packages:</b> "+COMMON.replace(/^Every package is monthly and includes: /,"monthly, and include ")}
   el("#bkPkgs").addEventListener("click",e=>{const b=e.target.closest("[data-pk]");if(!b)return;bk.pkg=bk.cat.pk[+b.dataset.pk];el("#bkSum1").innerHTML=sum();show(3);setTimeout(()=>el("#bk-brand").focus({preventScroll:true}),400)});
   document.querySelectorAll("#book [data-go]").forEach(b=>b.addEventListener("click",()=>show(+b.dataset.go)));
   function sum(full){let h=`<div class="row"><span>Category</span><span>${bk.cat.name}</span></div><div class="row"><span>Package</span><span>${bk.pkg.n} · ${bk.pkg.s}</span></div>`;
     if(full)h+=`<div class="row"><span>Brand</span><span>${esc(bk.brand)}</span></div><div class="row"><span>Booking code</span><span class="code">${bk.code}</span></div>`;
-    return h+`<div class="row total"><span>Amount to pay (1st month)</span><span>${SHOW_PRICES?money(bk.pkg.p):"Confirmed on WhatsApp"}</span></div>`}
+    return h+`<div class="row total"><span>Amount to pay (1st month)</span><span>${(SHOW_PRICES||bk.cat.real)?money(bk.pkg.p):"Confirmed on WhatsApp"}</span></div>`}
   const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   el("#bkForm").addEventListener("submit",e=>{e.preventDefault();
     bk.brand=el("#bk-brand").value.trim();bk.phone=el("#bk-phone").value.trim();bk.ig=el("#bk-ig").value.trim();
@@ -734,9 +735,9 @@ const CATS = [
     const d=new Date();bk.code=`LL-${bk.cat.code}-${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}-${Math.floor(1000+Math.random()*9000)}`;
     el("#bkSum2").innerHTML=sum(true);el("#bkCode1").textContent=bk.code;el("#bkAddr").textContent=STORE_ADDRESS;
     const has=BANK.bank&&BANK.title&&(BANK.account||BANK.iban);
-    el("#bkBank").innerHTML=has?[["Bank",BANK.bank],["Account title",BANK.title],["Account no.",BANK.account],["IBAN",BANK.iban],["Amount",SHOW_PRICES?money(bk.pkg.p):""],["Reference",bk.code]].filter(r=>r[1]).map(([k,v],i)=>`<div class="row"><span>${k}</span><b>${esc(String(v))}</b><button class="copy" type="button" data-copy="${esc(String(v))}">Copy</button></div>`).join("")
+    el("#bkBank").innerHTML=has?[["Bank",BANK.bank],["Account title",BANK.title],["Account no.",BANK.account],["IBAN",BANK.iban],["Amount",(SHOW_PRICES||bk.cat.real)?money(bk.pkg.p):""],["Reference",bk.code]].filter(r=>r[1]).map(([k,v],i)=>`<div class="row"><span>${k}</span><b>${esc(String(v))}</b><button class="copy" type="button" data-copy="${esc(String(v))}">Copy</button></div>`).join("")
       :`<div class="row" style="grid-template-columns:1fr"><b>We'll send you our bank details and the exact amount on WhatsApp.</b></div>`;
-    const msg=`Hi Luxe Lane! New space booking ✅\n\nBooking code: ${bk.code}\nBrand: ${bk.brand}\nPhone: ${bk.phone}${bk.ig?`\nInstagram: ${bk.ig}`:""}\nCategory: ${bk.cat.name}\nPackage: ${bk.pkg.n} (${bk.pkg.s})${SHOW_PRICES?": "+money(bk.pkg.p)+"/month":""}\n\n${has?(SHOW_PRICES?"I'll send the payment screenshot here.":"Please confirm the amount and I'll send the payment screenshot here."):"Please send me the bank details and amount."}\nPreferred drop-off day & time: \n(Or sending by courier from: )`;
+    const msg=`Hi Luxe Lane! New space booking ✅\n\nBooking code: ${bk.code}\nBrand: ${bk.brand}\nPhone: ${bk.phone}${bk.ig?`\nInstagram: ${bk.ig}`:""}\nCategory: ${bk.cat.name}\nPackage: ${bk.pkg.n} (${bk.pkg.s})${(SHOW_PRICES||bk.cat.real)?": "+money(bk.pkg.p)+"/month":""}\n\n${has?((SHOW_PRICES||bk.cat.real)?"I'll send the payment screenshot here.":"Please confirm the amount and I'll send the payment screenshot here."):"Please send me the bank details and amount."}\nPreferred drop-off day & time: \n(Or sending by courier from: )`;
     el("#bkWa").href=waLink(msg);show(4)});
   el("#book").addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if(!b)return;const v=b.dataset.copy==="addr"?STORE_ADDRESS:b.dataset.copy;navigator.clipboard?.writeText(v).then(()=>toast("Copied"),()=>toast(v))});
   const mode=()=>{const on=location.hash==="#book";document.body.classList.toggle("bookmode",on);if(on)setTimeout(()=>scrollTo({top:0}),0)};

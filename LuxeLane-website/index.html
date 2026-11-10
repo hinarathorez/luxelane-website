@@ -159,7 +159,25 @@ nav.main a:hover{color:var(--brass-text)}
 body.bookmode main>section:not(#book),body.bookmode .ribbon{display:none}
 body.bookmode #book{min-height:80vh}
 @media (max-width:760px){.cats{grid-template-columns:repeat(2,1fr)}.pkgs{grid-template-columns:1fr}.bank .row{grid-template-columns:1fr auto}.bank .row span{grid-column:1/-1}.steps li{font-size:.6rem;letter-spacing:.06em}}
-@media (max-width:760px){nav.main{display:flex}nav.main a:not(.navbook){display:none}}
+html{scroll-padding-top:90px}
+@media (max-width:760px){
+  html{scroll-padding-top:120px}
+  header.site .bar{flex-wrap:wrap;row-gap:0;padding-bottom:0}
+  nav.main{display:flex;order:3;width:100%;justify-content:space-between;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-top:10px;padding:10px 0 11px;border-top:1px solid var(--line)}
+  nav.main::-webkit-scrollbar{display:none}
+  nav.main a{font-size:.7rem;letter-spacing:.1em;white-space:nowrap;padding:2px 0}
+  header.site.scrolled nav.main{margin-top:6px;padding:8px 0 9px}
+  a.wa-float{font-size:0;letter-spacing:0;gap:0;padding:14px;border-radius:50%}
+  a.wa-float svg{width:26px;height:26px}
+}
+.bk-home{display:none;margin-bottom:14px;font-size:var(--step--1);letter-spacing:.06em;color:var(--ink-soft);text-decoration:none}
+.bk-home:hover{color:var(--ink)}
+body.bookmode .bk-home{display:inline-block}
+@media (max-width:400px){
+  nav.main{gap:10px}nav.main a{font-size:.64rem;letter-spacing:.08em}
+  .word b{letter-spacing:.14em;font-size:1rem}.word small{letter-spacing:.2em}.bagbtn{padding:.4rem .55rem;gap:.35rem}.mark{gap:.5rem}
+  .cats{grid-template-columns:repeat(2,minmax(0,1fr))}.cat{min-width:0;padding:14px 12px}.cat b{font-size:1.1rem;overflow-wrap:anywhere}
+}
 /* Brand ribbon */
 .ribbon{overflow:hidden;background:var(--band);color:#fff}
 .ribbon .track{display:flex;gap:3rem;padding-block:18px;white-space:nowrap;width:max-content;animation:slide 32s linear infinite}
@@ -362,7 +380,7 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
       <div>
         <p class="eyebrow">Bukhari Commercial · DHA Phase 6 · Karachi</p>
         <h1><span class="ln"><span>Many labels.</span></span><span class="ln"><span><em>One lane.</em></span></span></h1>
-        <p class="lede">Clothing and jewellery brands from across Pakistan, under one roof in Bukhari Commercial. Browse here, order on WhatsApp, pay cash on delivery.</p>
+        <p class="lede">Fashion, jewellery and lifestyle brands from across Pakistan, under one roof in Bukhari Commercial. Browse here, order on WhatsApp, pay cash on delivery.</p>
         <div class="ctas">
           <a class="btn" href="#arrivals">Shop new arrivals</a>
           <a class="btn ghost" href="#book">Rent a space for your brand</a>
@@ -447,6 +465,7 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
   <section class="block book" id="book">
     <div class="wrap narrow">
       <div class="bk-top">
+        <a class="bk-home" href="#top">← Back to Luxe Lane home</a>
         <p class="eyebrow">For brands · Luxe Lane, DHA Phase 6</p>
         <h2>Book your space</h2>
         <p class="lede-s">Four quick steps. Choose, pay, drop off, and start selling.</p>

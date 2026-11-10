@@ -125,6 +125,7 @@ nav.main a:hover{color:var(--brass-text)}
 .pkg .space{font-size:var(--step--1);color:var(--brass-text);letter-spacing:.04em}
 .pkg ul{margin:0;padding-left:1.1rem;color:var(--ink-soft);font-size:.92rem;display:grid;gap:.3rem;flex:1;align-content:start}
 .pkg .btn{width:100%;margin-top:.4rem}
+.pkg.quote{max-width:560px;gap:1rem}.pkg.quote p{color:var(--ink-soft)}.pkg:only-child{max-width:560px}
 .common{margin-top:18px;font-size:var(--step--1);color:var(--ink-soft)}
 .common b{color:var(--ink)}
 .summary{border:1px dashed var(--line);background:#faf7f4;padding:14px 16px;margin-bottom:18px;font-size:.95rem;display:grid;gap:.25rem}
@@ -690,23 +691,14 @@ const CATS = [
    {n:"Platinum", p:80000, s:"20–25 outfits · bridal & premium display", f:["Bridal display & premium display","Mannequin display","Brand name display","Social media handling (3 posts & 5 stories a week)","5 dresses shot, edited & posted","Coverage in store raids","Sales assistance"]}]},
  {id:"bags", code:"BG", name:"Bags", ic:"👜", hint:"Handbags, clutches, totes", real:1, pk:[
    {n:"Signature Shelf", p:15000, s:"2 shelves · up to 16 bags", pop:1, f:["Brand name card on shelf","Bags styled with outfits on the floor","1 Instagram story feature every week"]},
-   {n:"Showcase", p:35000, s:"Feature wall section", f:["Everything in Signature","Eye-level feature wall","1 dedicated Instagram reel a month"]}]},
- {id:"shoes", code:"SH", name:"Shoes", ic:"👠", hint:"Heels, flats, khussas, sneakers", pk:[
-   {n:"Starter Shelf", p:10000, s:"1 shelf · up to 10 pairs", f:["Brand name card on shelf","Sold by our floor staff","Weekly sales update"]},
-   {n:"Signature Shelf", p:18000, s:"2 shelves · up to 20 pairs", pop:1, f:["Everything in Starter","Shoes styled with outfits on the floor","1 Instagram story feature every week"]},
-   {n:"Showcase", p:30000, s:"Feature display + try-on seat", f:["Everything in Signature","Front-of-store shoe display","1 dedicated Instagram reel a month"]}]},
- {id:"jewellery", code:"JW", name:"Jewellery", ic:"💍", hint:"Fine, fashion, bridal sets", pk:[
-   {n:"Starter Tray", p:8000, s:"1 velvet tray · up to 25 pieces", f:["Tray in our glass counter","Sold by our floor staff","Weekly sales update"]},
-   {n:"Signature Case", p:15000, s:"Half display case · up to 60 pieces", pop:1, f:["Everything in Starter","Bust displays for statement sets","1 Instagram story feature every week"]},
-   {n:"Showcase", p:25000, s:"Full lit glass case", f:["Everything in Signature","Your own lit case near the entrance","1 dedicated Instagram reel a month"]}]},
- {id:"paintings", code:"PT", name:"Paintings", ic:"🖼️", hint:"Canvas, prints, calligraphy", pk:[
-   {n:"Single Wall Spot", p:6000, s:"1 piece · up to 24 × 36 in", f:["Hung with name & price card","Sold by our floor staff","Weekly sales update"]},
-   {n:"Gallery", p:15000, s:"Up to 4 pieces", pop:1, f:["Everything in Single","Grouped as your own mini gallery","1 Instagram story feature every week"]},
-   {n:"Feature Wall", p:25000, s:"Dedicated wall · up to 8 pieces", f:["Everything in Gallery","Artist spotlight post on Instagram","1 dedicated Instagram reel a month"]}]},
- {id:"homedecor", code:"HD", name:"Home Décor", ic:"🏺", hint:"Vases, candles, tableware, linen", pk:[
-   {n:"Starter Shelf", p:10000, s:"1 shelf", f:["Brand name card on shelf","Sold by our floor staff","Weekly sales update"]},
-   {n:"Signature Table", p:18000, s:"Styled display table", pop:1, f:["Everything in Starter","Styled into the lounge area","1 Instagram story feature every week"]},
-   {n:"Showcase Corner", p:30000, s:"Fully styled corner", f:["Everything in Signature","A styled corner our shoppers sit in","1 dedicated Instagram reel a month"]}]}
+   {n:"Showcase", p:25000, s:"Feature wall section", f:["Everything in Signature","Eye-level feature wall","1 dedicated Instagram reel a month"]}]},
+ {id:"shoes", code:"SH", name:"Shoes", ic:"👠", hint:"Heels, flats, khussas, sneakers", real:1, pk:[
+   {n:"Shoe Shelf", p:15000, s:"Up to 15 designs", f:["Display of up to 15 designs","Brand name card on shelf","Shoes styled with outfits on the floor","Instagram story feature"]}]},
+ {id:"jewellery", code:"JW", name:"Jewellery", ic:"💍", hint:"Fine, fashion, bridal sets", real:1, pk:[
+   {n:"Standard", p:15000, s:"Around 20 pieces on display", f:["Display of around 20 jewellery pieces","Instagram story coverage","Photoshoot of 4 articles"]},
+   {n:"Premium", p:25000, s:"One entire display table", f:["One entire display table","Instagram story coverage 3 times","Photoshoot of 8 articles","Visible display spot","Mannequin display","Presence on the Luxe Lane website"]}]},
+ {id:"paintings", code:"PT", name:"Paintings", ic:"🖼️", hint:"Canvas, prints, calligraphy", quote:"We price painting displays by the size of wall space you need. Tell us about your pieces and their sizes on WhatsApp and we'll send you a quote.", wa:"Hi Luxe Lane! I'd like to display my paintings at your store.\n\nArtist / brand name: \nNumber of pieces: \nSizes: \n\nPlease send me a quote."},
+ {id:"homedecor", code:"HD", name:"Home Décor", ic:"🏺", hint:"Vases, candles, tableware, linen", range:"Rs 12,000 – Rs 25,000 / month", quote:"Our home décor packages depend on your products. Show us what you make on WhatsApp and we'll send you a quote.", wa:"Hi Luxe Lane! I'd like to display my home décor products at your store.\n\nBrand name: \nProducts: \n\nI'll share photos here. Please send me a quote."}
 ];
 /* ============================================================== */
 (function(){
@@ -719,7 +711,8 @@ const CATS = [
   if(PACKAGES_DRAFT) el("#bkDraft").hidden=false;
   el("#bkCats").innerHTML=CATS.map(c=>`<button type="button" class="cat" data-cat="${c.id}"><span class="ic" aria-hidden="true">${c.ic}</span><b>${c.name}</b><span>${c.hint}</span></button>`).join("");
   el("#bkCats").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;bk.cat=CATS.find(c=>c.id===b.dataset.cat);renderPkgs();show(2)});
-  function renderPkgs(){const c=bk.cat;el("#bkPkgTitle").textContent=c.name+" packages";
+  function renderPkgs(){const c=bk.cat;el("#bkPkgTitle").textContent=c.quote?c.name+": get a quote":c.name+" packages";
+    if(c.quote){el("#bkPkgs").innerHTML=`<div class="pkg quote">${c.range?`<div class="pr">${c.range}</div>`:""}<p>${c.quote}</p><a class="btn wa" href="${waLink(c.wa)}" target="_blank" rel="noopener">Enquire on WhatsApp</a></div>`;el("#bkCommon").innerHTML="";return}
     el("#bkPkgs").innerHTML=c.pk.map((p,i)=>`<div class="pkg${p.pop?" pop":""}">${p.pop?'<span class="flag">Most popular</span>':""}<h4>${p.n}</h4><div class="pr">${(SHOW_PRICES||bk.cat.real)?money(p.p)+" <small>/ month</small>":"<small>Monthly rate shared on WhatsApp</small>"}</div><div class="space">${p.s}</div><ul>${p.f.map(x=>`<li>${x}</li>`).join("")}</ul><button type="button" class="btn${p.pop?"":" ghost"}" data-pk="${i}">Choose ${p.n}</button></div>`).join("");
     el("#bkCommon").innerHTML="<b>All packages:</b> "+COMMON.replace(/^Every package is monthly and includes: /,"monthly, and include ")}
   el("#bkPkgs").addEventListener("click",e=>{const b=e.target.closest("[data-pk]");if(!b)return;bk.pkg=bk.cat.pk[+b.dataset.pk];el("#bkSum1").innerHTML=sum();show(3);setTimeout(()=>el("#bk-brand").focus({preventScroll:true}),400)});
